@@ -6,7 +6,8 @@
 	if (isset($_SESSION['level'])) {
 		if ( in_array($_SESSION['level'], array(10)) ) $menu.='<h2>Административная часть</h2><ul class="beads">';
 		if ( in_array($_SESSION['level'], array(10)) ) $menu.='<li> <a href="users.php">Пользователи</a> </li>';
-		if ( in_array($_SESSION['level'], array(10,2)) ) $menu.='<li> <a href="car_model.php">Категории</a> </li>';
+		if ( in_array($_SESSION['level'], array(10,2)) ) $menu.='<li> <a href="car_model.php">Модели автомобилей</a> </li>';
+		if ( in_array($_SESSION['level'], array(10,2)) ) $menu.='<li> <a href="car_brand.php">Марки автомобилей</a> </li>';
 		if ( in_array($_SESSION['level'], array(10,2)) ) $menu.='<li> <a href="products.php">Товары</a> </li>';
 		if ( in_array($_SESSION['level'], array(10,2)) ) $menu.='<li> <a href="discounts.php">Акции и скидки</a> </li>';
 		if ( in_array($_SESSION['level'], array(10,2)) ) $menu.='<li> <a href="orders.php">Заказы</a> </li>';

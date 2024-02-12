@@ -16,7 +16,7 @@ include "database.php";
 include "func.php";
 include "scripts.php";
 $con = connect();
-$title = 'Категории';
+$title = 'Модели автомобилей';
 $table = 'car_model';
 $table_2 = 'car_brand';
 ?>
@@ -84,7 +84,7 @@ $table_2 = 'car_brand';
 		";
 					mysqli_query($con, $query) or die(mysqli_error($con));
 
-					// удаление категории
+					// удаление модели
 					$query = "
 			DELETE FROM `$table`
 			WHERE id=$id
@@ -193,7 +193,7 @@ $table_2 = 'car_brand';
 							</tr>
 
 							<tr>
-								<td>Категория</td>
+								<td>Марка автомобиля</td>
 								<td>
 									<select id="car_brand" name="car_brand">
 										<?php
