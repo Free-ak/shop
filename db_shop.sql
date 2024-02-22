@@ -15,6 +15,103 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+
+--
+-- Table structure for table `reviews`
+--
+
+DROP TABLE IF EXISTS `reviews`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reviews` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `estimation` int NOT NUll,
+  `product_id` int NOT NUll,
+  `user_id` int ,
+  `descr` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reviews`
+--
+
+LOCK TABLES `reviews` WRITE;
+/*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
+INSERT INTO `reviews` (`estimation`, `product_id`, `user_id`, `descr`) 
+VALUES 
+(0,0,Null,"не выбрано"),
+(5, 1, 11, "Все понравилось"),
+(4, 2, 12, "Пойдет"),
+(5, 3, 14, "Установилось по штатным местам"),
+(5, 4, 19, "Все работает"),
+(4, 4, 20, "Под пиво пойдет");
+/*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+--
+-- Table structure for table `questions`
+--
+
+DROP TABLE IF EXISTS `questions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `questions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int NOT NUll,
+  `user_id` int,
+  `descr` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `questions`
+--
+
+LOCK TABLES `questions` WRITE;
+/*!40000 ALTER TABLE `questions` DISABLE KEYS */;
+INSERT INTO `questions` (`product_id`, `user_id`, `descr`) 
+VALUES 
+(0,null,"не выбрано"),
+(1, 11, "Работает без ошибок?"),
+(2, 12, "Где находится завод производитель?"),
+(3, 14, "Установка по штатным местам?"),
+(4, 19, "Нужно ли регулировать фары?"),
+(4, 20, "Вы занимаетесь установкой?");
+
+/*!40000 ALTER TABLE `questions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
+-- Table structure for table `manufacturer_country`
+--
+
+DROP TABLE IF EXISTS `manufacturer_country`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `manufacturer_country` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descr` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `manufacturer_country`
+--
+
+LOCK TABLES `manufacturer_country` WRITE;
+/*!40000 ALTER TABLE `manufacturer_country` DISABLE KEYS */;
+INSERT INTO `manufacturer_country` VALUES (0,' не выбрано'),(1,'Россия'),(2,'Китай'),(3,'Тайвань'),(4,'Германия'),(5,'Польша');
+/*!40000 ALTER TABLE `manufacturer_country` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `car_brand`
 --
