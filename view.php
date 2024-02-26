@@ -126,21 +126,21 @@
 
 <h1><?php echo $title;?></h1>
 <?php
-	$cat_id=empty($_GET['cat_id']) ? '' : abs(intval($_GET['cat_id']));
-	if ($cat_id) {
+	$type_of_light_product=empty($_GET['type_of_light_product']) ? '' : abs(intval($_GET['type_of_light_product']));
+	if ($type_of_light_product) {
 		// если выбрана категория
 		$query="
 			SELECT name
 			FROM car_model
 			WHERE 1
-				AND id=$cat_id
+				AND id=$type_of_light_product
 		";
 		$res=mysqli_query($con, $query) or die(mysqli_error($con));
 		$row=mysqli_fetch_array($res);
 		$cat_name=$row['name'];
 		echo "<h2>Категория: $cat_name</h2>";
 	};
-	$filter_cat= $cat_id==0 ? '' : "AND `$table`.`cat_id`='$cat_id'"; // если категория не выбрана, показать все товары
+	$filter_cat= $type_of_light_product==0 ? '' : "AND `$table`.`type_of_light_product`='$type_of_light_product'"; // если категория не выбрана, показать все товары
 	$query="
 	SELECT t.*
 	FROM (
@@ -150,10 +150,9 @@
 			`$table`.`descr`,
 			`car_model`.`name` AS `category`,
 			`$table`.`price`,
-			`$table`.`weight`,
-			`$table`.`length`,
-			`$table`.`width`,
-			`$table`.`height`,
+			`$table`.`type_of_light_product`,
+			`$table`.`carbrand`,
+			`$table`.`carmodel`,
 			`$table`.`amount`- IFNULL(ROUND(SUM(`items`.`amount`)),0) AS 'amount',
 			`discounts`.`value` AS `discount_value`,
       TIMESTAMPDIFF(DAY, `$table`.`date_add`, NOW()) AS `delta`
@@ -162,7 +161,7 @@
 		LEFT JOIN
 			`items` ON `items`.`product_id`=`products`.`id`
 		LEFT JOIN
-			`car_model` ON `car_model`.`id`=`$table`.`cat_id`
+			`car_model` ON `car_model`.`id`=`$table`.`type_of_light_product`
 		LEFT JOIN
 			`discounts` ON `discounts`.`id`=`$table`.`discount_id` AND NOW() BETWEEN `discounts`.`start` AND `discounts`.`stop`
 		WHERE 1
@@ -230,7 +229,7 @@
 					Наименование: <b><a href='card.php?product_id=$row[id]'>$row[name]</a></b><br>
 					Описание: $descr<br>
 					Цена: $price_str<br>
-					Масса: $row[weight] г<br>
+					Оценка по отзывам: В разработке<br>
 					Осталось: $row[amount] шт.<br>
 					<img src=\"$fname\" width=\"250px\" height=\"250px\" style='cursor:pointer;' onclick='to_cart($row[id]);'><br>
 					<button onclick='to_cart($row[id]);'>В корзину</button>

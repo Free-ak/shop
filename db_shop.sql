@@ -18,6 +18,169 @@
 
 
 --
+-- Table structure for table `type_of_light_reflector`
+--
+
+DROP TABLE IF EXISTS `type_of_light_reflector`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `type_of_light_reflector` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descr` varchar(200) ,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `type_of_light_reflector`
+--
+
+LOCK TABLES `type_of_light_reflector` WRITE;
+/*!40000 ALTER TABLE `type_of_light_reflector` DISABLE KEYS */;
+INSERT INTO `type_of_light_reflector` (`id`,`descr`) 
+VALUES 
+(0,"не выбрано"),
+(1, "Рефлектор"),
+(2, "Галогеновая линза"),
+(3, "Led модуль"),
+(5,"Bi-led модуль"),
+(6,"Xenon линза"),
+(7,"Bi-xenon линза"),
+(8,"Полоса");
+/*!40000 ALTER TABLE `type_of_light_reflector` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Table structure for table `type_of_light_reflector`
+--
+
+DROP TABLE IF EXISTS `type_of_light_source`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `type_of_light_source` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descr` varchar(200) ,
+  `power` int,
+  `lumen` int,
+  `voltage` int,
+  `glow_temperature` int,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `type_of_light_source`
+--
+
+LOCK TABLES `type_of_light_source` WRITE;
+/*!40000 ALTER TABLE `type_of_light_source` DISABLE KEYS */;
+
+
+INSERT INTO `type_of_light_source` (`descr`, `power`, `lumen`, `voltage`, `glow_temperature`) VALUES
+('Автомобильная лампа', null, null, null, null),
+('LED', 100, 3000, 12, 5500),
+('LED', 100, 3000, 12, 6000),
+('LED', 100, 3000, 12, 4300),
+('LED', 50, 4500, 12, 6000),
+('LED', 15, 500, 12, 2000),
+('LED', 15, 500, 12, 1000),
+('Ксенон', 35, 2800, 80, 3000),
+('Ксенон', 35, 3000, 80, 5000),
+('Ксенон', 35, 2600, 80 , 6000),
+('Ксенон', 50, 3800, 80, 3000),
+('Ксенон', 50, 3900, 80, 5000),
+('Ксенон', 50, 3600, 80, 6000),
+('Галоген', 55, 1000, 12, 3000),
+('Галоген', 55, 1000, 12, 4300),
+('Галоген', 21, 250, 12, 1000),
+('Галоген', 21, 250, 12, 2000),
+('LED', 15, 500, 12, 5500),
+('LED', 15, 250, 12, 5500);
+/*!40000 ALTER TABLE `type_of_light_source` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descr` varchar(200) ,
+  `type_of_light_reflector` int,
+  `type_of_light_source` int,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category`
+--
+
+LOCK TABLES `category` WRITE;
+/*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` (`descr`,  `type_of_light_source`,`type_of_light_reflector`) 
+VALUES 
+('Не выбрано', 0, 0),
+('Ближний свет', 1,5),
+('Ближний свет', 2,5 ),
+('Ближний свет', 3,5 ),
+('Ближний свет', 4,7 ),
+('Ближний свет', 7, 7),
+('Ближний свет', 8, 7),
+('Ближний свет', 9,7 ),
+('Ближний свет', 10,7 ),
+('Дальний свет', 13,1),
+('Дальний свет', 4,3 ),
+('Поворотник', 15,1 ),
+('Поворотник', 15,8 ),
+('Задний ход', 6,1 ),
+('Задний ход', 16,8 ),
+('Дхо', 17,8 ),
+('Габаритные огни', 18,8 );
+/*!40000 ALTER TABLE `category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+-- Table structure for table `type_of_light_product`
+--
+DROP TABLE IF EXISTS `type_of_light_product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `type_of_light_product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descr` varchar(200) ,
+  `Поворотник` int UNSIGNED null,
+  `Ближний свет` int UNSIGNED null,
+  `Дальний свет` int UNSIGNED null,
+  `Габаритные огни` int UNSIGNED null,
+  `ДХО` int UNSIGNED null,
+  `Задний ход` int UNSIGNED null,
+  `Противотуманная фара` int UNSIGNED null,
+  `Противотуманный фонарь` int UNSIGNED null,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `type_of_light_product`
+--
+
+LOCK TABLES `type_of_light_product` WRITE;
+/*!40000 ALTER TABLE `type_of_light_product` DISABLE KEYS */;
+INSERT INTO `type_of_light_product` (`descr`, `Поворотник`, `Ближний свет`, `Дальний свет`, `Габаритные огни`, `ДХО`, `Задний ход`, `Противотуманная фара`, `Противотуманный фонарь`) 
+VALUES 
+('Передние Bi-led фары', 6, 2, 5, 10, 10, NULL, NULL, NULL),
+('Передние Bi-xenon фары', 15, 3, 3, 10, 10, NULL, NULL, NULL),
+('Задние фонари', 8, NULL, NULL, 10, NULL, 17, NULL, 16),
+('Дневные ходовые огни', NULL, NULL, NULL, NULL, 15, NULL, NULL, NULL),
+('Задний ход и габаритные огни', NULL, NULL, NULL, 10, NULL, 17, NULL, NULL);
+/*!40000 ALTER TABLE `type_of_light_product` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
 -- Table structure for table `reviews`
 --
 
@@ -275,17 +438,16 @@ DROP TABLE IF EXISTS `products`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) DEFAULT NULL,
-  `descr` text DEFAULT NULL,
-  `cat_id` int(11) DEFAULT NULL,
+  `name` varchar(200) ,
+  `descr` text,
+  `type_of_light_product` int,
   `price` decimal(10,2) DEFAULT NULL,
   `discount_id` int(11) NOT NULL COMMENT 'id акции или скидки',
   `date_add` datetime NOT NULL DEFAULT current_timestamp(),
-  `weight` int(11) NOT NULL COMMENT 'масса',
-  `length` int(11) NOT NULL COMMENT 'длина',
-  `width` int(11) NOT NULL COMMENT 'ширина',
-  `height` int(11) NOT NULL COMMENT 'высота',
   `amount` int(11) NOT NULL COMMENT 'количество',
+  `carbrand` INT UNSIGNED NOT NULL,
+  `carmodel` INT UNSIGNED NOT NULL,
+  `country` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -296,7 +458,28 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (24,'Стекло правой фары для Chevrolet Cruze 2008-2015','',NULL,2500.00,0,'2022-10-05 11:35:20',0,0,0,0,0),(25,'Стекло на левую фару для Chevrolet Cruze 2008-2015','',NULL,300.00,0,'2022-10-13 08:37:16',0,0,0,0,1),(26,'Стекло на левую фару для Audi A3 2013-2016 дорестайлинг','',NULL,4200.00,0,'2022-11-11 11:37:58',0,0,0,0,3),(27,'Стекло на левую фару для Skoda Superb 2 2009-2013 дорестайлинг','',NULL,3150.00,1,'2022-09-07 08:23:28',0,0,0,0,5),(28,'Стекло правой фары для Skoda Octavia A5 2008-2013 рестайлинг','',NULL,2750.00,0,'2022-10-13 11:42:33',0,0,0,0,4),(32,'Стекло на левую фару для Audi A3 2016-2020 рестайлинг','Базовая единица: шт\r\n    Для замены на оригинальных фарах Audi A3 2016-2020 рестайлинг',NULL,6850.00,0,'2023-04-14 09:30:14',0,0,0,0,7),(33,'Стекло на левую фару для Ford Focus 3 2015-2018 рестайлинг',NULL,NULL,2600.00,2,'2023-04-22 09:56:49',0,0,0,0,14),(34,'Стекло правой фары для Mercedes Viano Vito W639 2010-2015 рестайлинг','',NULL,3600.00,0,'2023-04-22 09:58:42',0,0,0,0,7),(35,'Стекло правой фары для Audi Q3 2015-2018 рестайлинг','Базовая единица: шт\r\n    Для замены на оригинальных фарах Audi Q3 2015-2018 рестайлинг',NULL,5800.00,0,'2023-12-23 14:37:22',0,0,0,0,2),(36,'Стекло на левую фару для BMW 3 G20 2018','',NULL,11200.00,0,'2023-12-23 14:37:58',0,0,0,0,7),(37,'Стекло правой фары для BMW 3 E46 Sedan 1996-2003 дорестайлинг','Для замены на оригинальных фарах (БМВ) BMW 3 серии E46 Sedan 1996-2003 дорестайлинг',NULL,1900.00,0,'2023-12-23 14:39:00',0,0,0,0,8),(38,'Стекло на левую фару для BMW 1 F20 F21 2011-2015','',NULL,5600.00,2,'2023-12-23 14:40:24',0,0,0,0,6),(39,'Стекло на левую фару для Jaguar XJ 2010-2015','',NULL,8300.00,0,'2023-12-28 11:58:22',0,0,0,0,2);
+INSERT INTO `products` (`name`, `descr`, `type_of_light_product`, `price`, `discount_id`, `date_add`, `amount`, `carbrand`, `carmodel`, `country`)
+VALUES
+('Передние Bi-led фары Chevrolet Cruze', 'Передние Bi-led фары', 1, 100.00, 1, NOW(), 10, 1, 1, 1),
+('Передние Bi-xenon фары BMW 2-series', 'Передние Bi-xenon фары', 2, 200.00, 2, NOW(), 20, 2, 20, 2),
+('Задние фонари Ford Focus', 'Задние фонари', 3, 150.00, 0, NOW(), 15, 3, 30, 3),
+('Дневные ходовые огни Audi A6', 'Дневные ходовые огни', 4, 120.00, 0, NOW(), 25, 4, 40, 4),
+('Задний ход и габаритные огни Skoda Octavia', 'Задний ход и габаритные огни', 5, 80.00, 0, NOW(), 30, 5, 50, 5),
+('Передние Bi-led фары Chevrolet Cruze', 'Передние Bi-led фары', 1, 100.00, 1, NOW(), 10, 1, 1, 1),
+('Передние Bi-xenon фары BMW 2-series', 'Передние Bi-xenon фары', 2, 200.00, 2, NOW(), 20, 2, 20, 2),
+('Задние фонари Ford Focus', 'Задние фонари', 3, 150.00, 0, NOW(), 15, 3, 30, 3),
+('Дневные ходовые огни Audi A6', 'Дневные ходовые огни', 4, 120.00, 0, NOW(), 25, 4, 40, 4),
+('Задний ход и габаритные огни Skoda Octavia', 'Задний ход и габаритные огни', 5, 80.00, 0, NOW(), 30, 5, 50, 5),
+('Передние Bi-led фары Chevrolet Cruze', 'Передние Bi-led фары', 1, 100.00, 1, NOW(), 10, 1, 1, 1),
+('Передние Bi-xenon фары BMW 2-series', 'Передние Bi-xenon фары', 2, 200.00, 2, NOW(), 20, 2, 20, 2),
+('Задние фонари Ford Focus', 'Задние фонари', 3, 150.00, 0, NOW(), 15, 3, 30, 3),
+('Дневные ходовые огни Audi A6', 'Дневные ходовые огни', 4, 120.00, 0, NOW(), 25, 4, 40, 4),
+('Задний ход и габаритные огни Skoda Octavia', 'Задний ход и габаритные огни', 5, 80.00, 0, NOW(), 30, 5, 50, 5),
+('Передние Bi-led фары Chevrolet Cruze', 'Передние Bi-led фары', 1, 100.00, 1, NOW(), 10, 1, 1, 1),
+('Передние Bi-xenon фары BMW 2-series', 'Передние Bi-xenon фары', 2, 200.00, 2, NOW(), 20, 2, 20, 2),
+('Задние фонари Ford Focus', 'Задние фонари', 3, 150.00, 0, NOW(), 15, 3, 30, 3),
+('Дневные ходовые огни Audi A6', 'Дневные ходовые огни', 4, 120.00, 0, NOW(), 25, 4, 40, 4),
+('Задний ход и габаритные огни Skoda Octavia', 'Задний ход и габаритные огни', 5, 80.00, 0, NOW(), 30, 5, 50, 5);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -344,6 +527,8 @@ CREATE TABLE `users` (
   `date_reg` datetime DEFAULT NULL,
   `email` varchar(200) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
+  `car_brand` int (11) DEFAULT NULL,
+  `car_model` int (11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -354,7 +539,13 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Чибис','Инна','Геннадьевна','администратор','7913020000','ул.Знойная,45-26','admin','admin',NULL,NULL,10),(11,'Фенисов','Кузьма','','','794132164981','ул.Жвойского, 56-602','fen','fen',NULL,NULL,1),(12,'2234','','','','2234','2234','2234','2234',NULL,NULL,0),(14,'Зимний','Иван','','','','','zim','zim',NULL,NULL,2),(19,'Лукин','Лука','Лукич','','','','luk','luk',NULL,NULL,1),(20,'Жигалин','Петр','Аркадьевич','','791616161146','','tttt','ggg',NULL,NULL,1);
+INSERT INTO `users` (`id`, `surname`, `name`, `middlename`, `rank`, `phone`, `address`, `password`, `login`, `date_reg`, `email`, `level`, `car_brand`, `car_model`) VALUES
+(1,'Чибис','Инна','Геннадьевна','администратор','7913020000','ул.Знойная,45-26','admin','admin',NULL,NULL,10,NULL,NULL),
+(11,'Фенисов','Кузьма','','','794132164981','ул.Жвойского, 56-602','fen','fen',NULL,NULL,1,NULL,NULL),
+(12,'2234','','','','2234','2234','2234','2234',NULL,NULL,0,NULL,NULL),
+(14,'Зимний','Иван','','','','','zim','zim',NULL,NULL,2,NULL,NULL),
+(19,'Лукин','Лука','Лукич','','','','luk','luk',NULL,NULL,1,NULL,NULL),
+(20,'Жигалин','Петр','Аркадьевич','','791616161146','','tttt','ggg',NULL,NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

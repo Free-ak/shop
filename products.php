@@ -85,7 +85,7 @@
 		$id=intval($_GET['edit_id']);
 		$query="
 			SELECT
-				`name`, `descr`, `cat_id`, `price`, `discount_id`, `amount`, `weight`
+				`name`, `descr`, `type_of_light_product`, `price`, `discount_id`, `amount`, `carbrand`,`carmodel`,`country`
 			FROM `$table`
 			WHERE id=$id
 		";
@@ -93,31 +93,36 @@
 		$row=mysqli_fetch_array($res);
 		$descr=$row['descr'];
 		$name=$row['name'];
-		$cat_id=$row['cat_id'];
+		$type_of_light_product=$row['type_of_light_product'];
 		$price=$row['price'];
 		$discount_id=$row['discount_id'];
 		$amount=$row['amount'];
-		$weight=$row['weight'];
+		$country=$row['country'];
+		$carmodel=$row[`carmodel`];
+		$carbrand=$row[`carbrand`];
 	};
 
 	// если надо сохранить (если не пусто)
 	if (!empty($_POST['name'])) {
 		$name=mysqli_real_escape_string($con, trim($_POST['name']));
 		$descr=mysqli_real_escape_string($con, trim($_POST['descr']));
-		$cat_id=intval(trim($_POST['cat_id']));
+		$type_of_light_product=intval(trim($_POST['type_of_light_product']));
 		$price=mysqli_real_escape_string($con, trim($_POST['price']));
 		$discount_id=intval(trim($_POST['discount_id']));
 		$amount=intval(trim($_POST['amount']));
-		$weight=intval(trim($_POST['weight']));
-
+		$country=intval(trim($_POST['country']));
+		$carmodel=intval(trim($_POST['carmodel']));
+		$carbrand=intval(trim($_POST['carbrand']));
 		$fields="
 				`name`='$name',
 				`descr`='$descr',
-				`cat_id`='$cat_id',
+				`type_of_light_product`='$type_of_light_product',
 				`price`='$price',
 				`discount_id`='$discount_id',
 				`amount`='$amount',
-				`weight`='$weight'
+				`country`='$country',
+				`carmodel`='$carmodel';
+				`carbrand`='$carbrand';
 		";
 
 
@@ -180,7 +185,9 @@
 			`$table`.`amount` AS 'Количество',
 			IFNULL(ROUND(SUM(`items`.`amount`)),0) AS 'Бронировано',
 			`$table`.`amount`- IFNULL(ROUND(SUM(`items`.`amount`)),0) AS 'Свободный остаток',
-			`$table`.`weight` AS 'Масса'
+			`$table`.`country` AS 'Страна',
+			`$table`.`carmodel` AS 'Модель',
+			`$table`.`carbrand` AS 'Марка',
 			$admin_delete
 			$admin_edit
 		FROM
@@ -190,7 +197,7 @@
 #		LEFT JOIN
 #			`orders` ON (orders.id=items.ord_id #AND orders.status=0)
 		LEFT JOIN
-			`car_model` ON `car_model`.`id`=`$table`.`cat_id`
+			`car_model` ON `car_model`.`id`=`$table`.`type_of_light_product`
 		LEFT JOIN
 			`discounts` ON `discounts`.`id`=`$table`.`discount_id`
 		WHERE 1
@@ -238,7 +245,7 @@
 		<tr>
 			<td>Категория</td>
 			<td>
-				<select id="cat_id" name="cat_id">
+				<select id="type_of_light_product" name="type_of_light_product">
 					<?php
 						$query="
 							SELECT `id`, `name`, `descr`
@@ -249,7 +256,7 @@
 						";
 						$res=mysqli_query($con, $query) or die(mysqli_error($con));
 						while ($row=mysqli_fetch_array($res, MYSQLI_ASSOC)) {
-							$selected= ($cat_id==$row['id']) ? 'selected' : '';
+							$selected= ($type_of_light_product==$row['id']) ? 'selected' : '';
 							echo "
 								<option value='$row[id]' $selected>$row[name]</option>
 							";
@@ -267,9 +274,9 @@
 		</tr>
 
 		<tr>
-			<td>Масса</td>
+			<td>Страна</td>
 			<td>
-				<input type="text" id="weight" name="weight" value="<?php if (!empty($weight)) echo $weight;?>">
+				<input type="text" id="country" name="country" value="<?php if (!empty($country)) echo $country;?>">
 			</td>
 		</tr>
 
