@@ -77,7 +77,7 @@
 		LEFT JOIN
 			`items` ON `items`.`product_id`=`products`.`id`
 		LEFT JOIN
-			`car_model` ON `car_model`.`id`=`$table`.`cat_id`
+			`car_model` ON `car_model`.`id`=`$table`.`carmodel`
 		LEFT JOIN
 			`discounts` ON `discounts`.`id`=`$table`.`discount_id`
 		WHERE 1

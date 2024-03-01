@@ -165,15 +165,12 @@
 		};
 	};
 
-	if (isset($_POST['btn_submit'])) // была нажата кнопка сохранить - не надо больше отображать id
+	if (isset($_POST['btn_submit'])) {// была нажата кнопка сохранить - не надо больше отображать id
 		$id=0;
+	 }
 
-	// добавляем возможность удаления админам
-	$delete_confirm="onClick=\"return window.confirm(\'Подтверждаете удаление?\');\"";
-	$admin_delete=$edit ? ", CONCAT('<a href=\"$table.php?delete_id=', `$table`.id, '\" $delete_confirm>', 'удалить&nbsp;#', `$table`.id, '</a>') AS 'Удаление'" : '';
-	// добавляем возможность редактирования админам
-	$admin_edit=$edit ? ", CONCAT('<a href=\"$table.php?edit_id=', `$table`.id, '\">', 'редактировать&nbsp;#', `$table`.id, '</a>') AS 'Редактирование'" : '';
-	$query="
+		$delete_confirm="onClick=\"return window.confirm(\'Подтверждаете удаление?\');\"";
+		$query = "
 		SELECT
 			`$table`.`id` AS 'Код',
 			CONCAT('<image src=\"upload/', `$table`.`id`, '.jpg\" style=\"width:32px; height:32px\" alt=\"нет фото\">', `$table`.`name`) AS 'Наименование',
@@ -183,30 +180,27 @@
 			`discounts`.`value` AS 'Размер скидки',
 			`discounts`.`name` AS 'Наименование акции/скидки',
 			`$table`.`amount` AS 'Количество',
-			IFNULL(ROUND(SUM(`items`.`amount`)),0) AS 'Бронировано',
-			`$table`.`amount`- IFNULL(ROUND(SUM(`items`.`amount`)),0) AS 'Свободный остаток',
-			`$table`.`country` AS 'Страна',
-			`$table`.`carmodel` AS 'Модель',
-			`$table`.`carbrand` AS 'Марка',
-			$admin_delete
-			$admin_edit
+			IFNULL(ROUND(SUM(`items`.`amount`)), 0) AS 'Бронировано',
+			`$table`.`amount` - IFNULL(ROUND(SUM(`items`.`amount`)), 0) AS 'Свободный остаток',
+			IF($edit, CONCAT('<a href=\"$table.php?delete_id=', `$table`.`id`, '\" $delete_confirm>', 'удалить&nbsp;#', `$table`.`id`, '</a>'), NULL) AS 'Удаление',
+			IF($edit, CONCAT('<a href=\"$table.php?edit_id=', `$table`.`id`, '\">', 'редактировать&nbsp;#', `$table`.`id`, '</a>'), NULL) AS 'Редактирование'
 		FROM
 			`$table`
 		LEFT JOIN
-			`items` ON `items`.`product_id`=`products`.`id`
-#		LEFT JOIN
-#			`orders` ON (orders.id=items.ord_id #AND orders.status=0)
+			`items` ON `items`.`product_id` = `$table`.`id`
 		LEFT JOIN
-			`car_model` ON `car_model`.`id`=`$table`.`type_of_light_product`
+			`car_model` ON `car_model`.`id` = `$table`.`type_of_light_product`
 		LEFT JOIN
-			`discounts` ON `discounts`.`id`=`$table`.`discount_id`
+			`discounts` ON `discounts`.`id` = `$table`.`discount_id`
 		WHERE 1
 		GROUP BY `$table`.`id`
 		ORDER BY `$table`.`name`
 		LIMIT 50;
 	";
-
+	
 	echo SQLResultTable($query, $con, '');
+	
+
 ?>
 
 <?php
