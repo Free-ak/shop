@@ -10,7 +10,8 @@
 	if (!empty($_POST['user_id'])) {
 		$user_id=abs(intval(trim($_POST['user_id'])));
 	}
-	else {		die('no user');
+	else {
+		die('no user');
 	};
 
 	// подключаемся к БД
@@ -41,7 +42,9 @@
 	$amount=0;
 	$res=mysqli_query($con, $query) or die(mysqli_error($con));
 
-	if (!mysqli_num_rows($res)) {		die('<h3>Корзина пуста</h3>');	};
+	if (!mysqli_num_rows($res)) {
+		die('<h3>Корзина пуста</h3>');
+	};
 
 	echo '
 	<table border=0 width=900px>
