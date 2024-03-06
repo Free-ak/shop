@@ -79,6 +79,54 @@ $table = 'products';
 		});
 
 	};
+
+	// Функция для загрузки товаров по заданным параметрам
+	function loadProducts(carbrand, carmodel, country,type_of_light_product) {
+		// AJAX запрос к файлу ajax_get_products.php
+		$.ajax({
+			url: 'ajax_get_products.php',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				carbrand: carbrand,
+				carmodel: carmodel,
+				country: country,
+				type_of_light_product: type_of_light_product
+			},
+			success: function (response) {
+				// Обработка успешного ответа
+				if (response.error) {
+					alert('Ошибка: ' + response.error);
+				} else {
+					// Обновление отображаемых товаров на странице
+					updateProducts(response);
+				}
+			},
+			error: function (xhr, status, error) {
+				// Обработка ошибок
+				alert('Произошла ошибка при загрузке товаров: ' + error);
+			}
+		});
+	}
+
+	// Функция для обновления отображаемых товаров на странице
+	function updateProducts(products) {
+		// Очистка текущего содержимого товаров
+		$('#products-container').empty();
+
+		// Добавление новых товаров на страницу
+		products.forEach(function (product) {
+			var productHtml = `
+				<div class="product">
+					<h3>${product.name}</h3>
+					<p>${product.descr}</p>
+					<p>Цена: ${product.price} ${valuta}</p>
+					<!-- Добавьте другие свойства товара, если необходимо -->
+				</div>
+			`;
+			$('#products-container').append(productHtml);
+		});
+	}
 </script>
 <html>
 
@@ -126,44 +174,91 @@ $table = 'products';
 			<td width="900px">
 				<form id="search_form" method="GET">
 					<select name="carbrand" id="carbrand">
-						<option value="">Выберите марку автомобиля</option>
-						<!-- Ваши варианты марок автомобилей будут здесь -->
-						<option value="1">Chevrolet</option>
+					echo "<option value='0'>Выбор марки автомобиля</option>";
+						<?php
+						$query = "SELECT id, name FROM carbrand where id <> 0";
+						$result = mysqli_query($con, $query);
+						// Проверка наличия данных
+						if (mysqli_num_rows($result) > 0) {
+							// Отображение опций для каждой модели автомобиля
+							while ($row = mysqli_fetch_assoc($result)) {
+								echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
+							}
+						} else {
+						echo '<option value="">Данные не найдены</option>';}
+						?>
 					</select>
 					<select name="carmodel" id="carmodel">
 						<option value="">Выберите модель автомобиля</option>
 						<!-- Здесь будут отображаться модели автомобилей -->
 					</select>
+					<button type="button"
+						onclick="loadProducts($('#carbrand').val(), $('#carmodel').val(), $('#country').val(),$('#type_of_light_product').val());">Поиск
+					</button>
 				</form>
+
 				<script>
-					// Находим поле выбора марки автомобиля
+					// Скрипт для выбора марки автомобиля
 					const carbrandSelect = document.getElementById('carbrand');
-					// Назначаем обработчик события на изменение значения поля выбора марки автомобиля
 					carbrandSelect.addEventListener('change', function () {
-						// Получаем выбранное значение марки автомобиля
 						const selectedCarbrand = carbrandSelect.value;
-						// Получаем текущий URL
 						let url = window.location.href;
-						// Создаем объект URLSearchParams для работы с параметрами URL
 						let searchParams = new URLSearchParams(window.location.search);
-						// Устанавливаем новое значение параметра carbrand
 						searchParams.set('carbrand', selectedCarbrand);
-						// Обновляем параметры в URL
 						url = url.split('?')[0] + '?' + searchParams.toString();
-						// Перенаправляем на новый URL
 						window.location.href = url;
-					})
-
-					// Получаем значение параметра carbrand из URL
-					const urlParams = new URLSearchParams(window.location.search);
-					const carbrandParam = urlParams.get('carbrand');
-
-					// Если параметр carbrand присутствует в URL, устанавливаем его в качестве выбранного значения в поле выбора марки автомобиля
+					});
+					const carbrandParam = (new URLSearchParams(window.location.search)).get('carbrand');
 					if (carbrandParam) {
 						carbrandSelect.value = carbrandParam;
 					}
-					;
+
+					// Скрипт для выбора модели автомобиля
+					const carmodelSelect = document.getElementById('carmodel');
+					carmodelSelect.addEventListener('change', function () {
+						const selectedCarmodel = carmodelSelect.value;
+						let url = window.location.href;
+						let searchParams = new URLSearchParams(window.location.search);
+						searchParams.set('carmodel', selectedCarmodel);
+						url = url.split('?')[0] + '?' + searchParams.toString();
+						window.location.href = url;
+					});
+					const carmodelParam = (new URLSearchParams(window.location.search)).get('carmodel');
+					if (carmodelParam) {
+						carmodelSelect.value = carmodelParam;
+					}
+
+					// Скрипт для выбора страны
+					const countrySelect = document.getElementById('country');
+					countrySelect.addEventListener('change', function () {
+						const selectedCountry = countrySelect.value;
+						let url = window.location.href;
+						let searchParams = new URLSearchParams(window.location.search);
+						searchParams.set('country', selectedCountry);
+						url = url.split('?')[0] + '?' + searchParams.toString();
+						window.location.href = url;
+					});
+					const countryParam = (new URLSearchParams(window.location.search)).get('country');
+					if (countryParam) {
+						countrySelect.value = countryParam;
+					}
+
+					// Скрипт для выбора типа оптики
+					const countrySelect = document.getElementById('country');
+					countrySelect.addEventListener('change', function () {
+						const selectedCountry = countrySelect.value;
+						let url = window.location.href;
+						let searchParams = new URLSearchParams(window.location.search);
+						searchParams.set('country', selectedCountry);
+						url = url.split('?')[0] + '?' + searchParams.toString();
+						window.location.href = url;
+					});
+					const countryParam = (new URLSearchParams(window.location.search)).get('country');
+					if (countryParam) {
+						countrySelect.value = countryParam;
+					}
 				</script>
+
 				<h1>
 					<?php echo $title; ?>
 				</h1>
