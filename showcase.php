@@ -15,8 +15,6 @@ $query = "
         AND `car_brand`.`id` <> 0
 ";
 
-debug_to_console($query);
-
 echo '<h2><a href="view.php"><img src="images/cats.png" height="18px"> Категории</a></h2>';
 echo '';
 
@@ -31,12 +29,5 @@ echo '';
 echo $showcase;
 
 // Функция для вывода отладочной информации в консоль браузера
-function debug_to_console($data)
-{
-    $output = $data;
-    if (is_array($output))
-        $output = implode(',', $output);
 
-    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
-}
 ?>

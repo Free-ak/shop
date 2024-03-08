@@ -79,54 +79,7 @@ $table = 'products';
 		});
 
 	};
-
-	// Функция для загрузки товаров по заданным параметрам
-	function loadProducts(carbrand, carmodel, country,type_of_light_product) {
-		// AJAX запрос к файлу ajax_get_products.php
-		$.ajax({
-			url: 'ajax_get_products.php',
-			type: 'POST',
-			dataType: 'json',
-			data: {
-				carbrand: carbrand,
-				carmodel: carmodel,
-				country: country,
-				type_of_light_product: type_of_light_product
-			},
-			success: function (response) {
-				// Обработка успешного ответа
-				if (response.error) {
-					alert('Ошибка: ' + response.error);
-				} else {
-					// Обновление отображаемых товаров на странице
-					updateProducts(response);
-				}
-			},
-			error: function (xhr, status, error) {
-				// Обработка ошибок
-				alert('Произошла ошибка при загрузке товаров: ' + error);
-			}
-		});
-	}
-
-	// Функция для обновления отображаемых товаров на странице
-	function updateProducts(products) {
-		// Очистка текущего содержимого товаров
-		$('#products-container').empty();
-
-		// Добавление новых товаров на страницу
-		products.forEach(function (product) {
-			var productHtml = `
-				<div class="product">
-					<h3>${product.name}</h3>
-					<p>${product.descr}</p>
-					<p>Цена: ${product.price} ${valuta}</p>
-					<!-- Добавьте другие свойства товара, если необходимо -->
-				</div>
-			`;
-			$('#products-container').append(productHtml);
-		});
-	}
+	
 </script>
 <html>
 
@@ -174,27 +127,63 @@ $table = 'products';
 			<td width="900px">
 				<form id="search_form" method="GET">
 					<select name="carbrand" id="carbrand">
-					echo "<option value='0'>Выбор марки автомобиля</option>";
+						<option value='0'>Выбор марки автомобиля</option>";
 						<?php
-						$query = "SELECT id, name FROM carbrand where id <> 0";
+						$query = "SELECT id, name FROM car_brand where id <> 0";
 						$result = mysqli_query($con, $query);
 						// Проверка наличия данных
-						if (mysqli_num_rows($result) > 0) {
+						if (mysqli_num_rows($result) > 0) 
+						{
 							// Отображение опций для каждой модели автомобиля
 							while ($row = mysqli_fetch_assoc($result)) {
 								echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
 							}
 						} else {
-						echo '<option value="">Данные не найдены</option>';}
+							echo '<option value="">Данные не найдены</option>';
+						}
 						?>
 					</select>
 					<select name="carmodel" id="carmodel">
 						<option value="">Выберите модель автомобиля</option>
-						<!-- Здесь будут отображаться модели автомобилей -->
+						<?php
+						// Если марка автомобиля уже выбрана, загружаем модели для этой марки
+						if (isset($_GET['carbrand']) && !empty($_GET['carbrand'])) {
+							$carbrand_id = $_GET['carbrand'];
+							// Запрос для выбора моделей автомобилей по выбранной марке
+							$query = "SELECT id, name FROM car_model WHERE car_brand = $carbrand_id";
+							$result = mysqli_query($con, $query);
+							// Проверка наличия данных
+							if (mysqli_num_rows($result) > 0) {
+								// Отображение опций для каждой модели автомобиля
+								while ($row = mysqli_fetch_assoc($result)) {
+									echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
+								}
+							} else {
+								echo '<option value="">Модели не найдены</option>';
+							}
+						}
+						?>
 					</select>
-					<button type="button"
-						onclick="loadProducts($('#carbrand').val(), $('#carmodel').val(), $('#country').val(),$('#type_of_light_product').val());">Поиск
-					</button>
+					<select name="country" id="country">
+						<option value="">Выберите страну производителя</option>
+						<?php
+						// Если марка автомобиля уже выбрана, загружаем модели для этой марки
+						
+						// Запрос для выбора страны производителя
+						$query = "SELECT id, descr FROM manufacturer_country where id <> 0";
+						$result = mysqli_query($con, $query);
+						// Проверка наличия данных
+						if (mysqli_num_rows($result) > 0) {
+							// Отображение 
+							while ($row = mysqli_fetch_assoc($result)) {
+								echo "<option value=\"{$row['id']}\">{$row['descr']}</option>";
+							}
+						} else {
+							echo '<option value="">Страна не найдена</option>';
+						}
+
+						?>
+					</select>
 				</form>
 
 				<script>
@@ -244,24 +233,28 @@ $table = 'products';
 					}
 
 					// Скрипт для выбора типа оптики
-					const countrySelect = document.getElementById('country');
+					const typeoflightproductSelect = document.getElementById('type_of_light_product');
 					countrySelect.addEventListener('change', function () {
-						const selectedCountry = countrySelect.value;
+						const selectedTypeoflightproduct = typeoflightproductSelect.value;
 						let url = window.location.href;
 						let searchParams = new URLSearchParams(window.location.search);
-						searchParams.set('country', selectedCountry);
+						searchParams.set('type_of_light_product', typeoflightproductSelect);
 						url = url.split('?')[0] + '?' + searchParams.toString();
 						window.location.href = url;
 					});
-					const countryParam = (new URLSearchParams(window.location.search)).get('country');
-					if (countryParam) {
-						countrySelect.value = countryParam;
+					const typeoflightproductParam = (new URLSearchParams(window.location.search)).get('type_of_light_product');
+					if (typeoflightproductParam) {
+						typeoflightproductSelect.value = typeoflightproductParam;
 					}
 				</script>
 
 				<h1>
 					<?php echo $title; ?>
 				</h1>
+				<div id="products-container">
+					<!-- Сюда будут добавлены товары -->
+					
+				</div>
 				<?php
 				$carbrand = empty($_GET['carbrand']) ? '' : abs(intval($_GET['carbrand']));
 				if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['carbrand'])) {
@@ -290,7 +283,66 @@ $table = 'products';
 						}
 					}
 				}
-				$filter_cat = $carbrand == 0 ? '' : "AND `$table`.`carbrand`='$carbrand'"; // если категория не выбрана, показать все товары
+				$filter_carbrand = $carbrand == 0 ? '' : "AND `$table`.`carbrand`='$carbrand'"; // если категория не выбрана, показать все товары
+				$carmodel = empty($_GET['carmodel']) ? '' : abs(intval($_GET['carmodel']));
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['carmodel'])) {
+    if (!empty($carmodel)) {
+        // Если выбрана модель автомобиля
+        $query = "SELECT name FROM car_model WHERE id=$carmodel";
+        $res = mysqli_query($con, $query) or die(mysqli_error($con));
+        if ($row = mysqli_fetch_array($res)) {
+            // Если удалось извлечь имя модели автомобиля
+            $carmodel_name = $row['name'];
+            // Запрос для проверки наличия оптики для модели автомобиля
+            $query = "SELECT * FROM `$table`
+                      LEFT JOIN `car_model` ON `$table`.carmodel = `car_model`.id
+                      WHERE `car_model`.name = '$carmodel_name' AND `car_model`.id <> 0";
+            $res2 = mysqli_query($con, $query) or die(mysqli_error($con));
+            if ($row2 = mysqli_fetch_array($res2)) {
+                // Если удалось извлечь информацию о модели автомобиля
+                echo "<h2>Модель: $carmodel_name</h2>";
+            } else {
+                // Если альтернативная оптика отсутствует
+                echo "<h2>Извините, альтернативная оптика для автомобиля модели: $carmodel_name отсутствует.</h2>";
+            }
+        } else {
+            // Если не удалось найти информацию о модели автомобиля
+            echo "<h2>Извините, информация о выбранной модели автомобиля отсутствует.</h2>";
+        }
+    }
+}
+
+$filter_carmodel = $carmodel == 0 ? '' : "AND `$table`.`carmodel`='$carmodel'"; // если модель не выбрана, показать все товары
+				
+				$country = empty($_GET['country']) ? '' : abs(intval($_GET['country']));
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['country'])) {
+    if (!empty($country)) {
+        // Если выбрана страна
+        $query = "SELECT descr FROM manufacturer_country WHERE id=$country";
+        $res = mysqli_query($con, $query) or die(mysqli_error($con));
+        if ($row = mysqli_fetch_array($res)) {
+            // Если удалось извлечь название страны
+            $country_name = $row['descr'];
+            // Запрос для проверки наличия оптики для выбранной страны
+            $query = "SELECT * FROM `$table`
+                      WHERE `country` = '$country_name'";
+            $res2 = mysqli_query($con, $query) or die(mysqli_error($con));
+            if ($row2 = mysqli_fetch_array($res2)) {
+                // Если удалось извлечь информацию о товарах из этой страны
+                echo "<h2>Страна производства: $country_name</h2>";
+            } else {
+                // Если альтернативная оптика отсутствует
+                echo "<h2>Извините, альтернативная оптика из страны: $country_name отсутствует.</h2>";
+            }
+        } else {
+            // Если не удалось найти информацию о стране
+            echo "<h2>Извините, информация о выбранной стране отсутствует.</h2>";
+        }
+    }
+}
+
+$filter_country = $country == 0 ? '' : "AND `$table`.`country`='$country'"; // если страна не выбрана, показать все товары
+				
 				$query = "
 	SELECT t.*
 	FROM (
@@ -315,7 +367,9 @@ $table = 'products';
 		LEFT JOIN
 			`discounts` ON `discounts`.`id`=`$table`.`discount_id` AND NOW() BETWEEN `discounts`.`start` AND `discounts`.`stop`
 		WHERE 1
-			$filter_cat
+			$filter_carbrand
+			$filter_carmodel
+			$filter_country
 		GROUP BY `$table`.`id`
 		ORDER BY `$table`.`name`
 		LIMIT 50) AS t
