@@ -116,24 +116,43 @@
 
 <?php
 	$product_id=empty($_GET['product_id']) ? 0 : abs(intval($_GET['product_id']));
-	$query="
+	$product_id = empty($_GET['product_id']) ? 0 : abs(intval($_GET['product_id']));
+
+$query="
+	SELECT t.*, AVG(r.estimation) AS avg_estimation
+	FROM (
 		SELECT
 			`$table`.`id`,
 			`$table`.`name`,
 			`$table`.`descr`,
 			`car_model`.`name` AS `category`,
 			`$table`.`price`,
+			`$table`.`type_of_light_product`,
+			`$table`.`carbrand`,
+			`$table`.`carmodel`,
+			`$table`.`amount` - IFNULL(ROUND(SUM(`items`.`amount`)),0) AS 'amount',
 			`discounts`.`value` AS `discount_value`,
 			TIMESTAMPDIFF(DAY, `$table`.`date_add`, NOW()) AS `delta`
 		FROM
 			`$table`
 		LEFT JOIN
-			`car_model` ON `car_model`.`id`=`$table`.`cat_id`
+			`items` ON `items`.`product_id` = `$table`.`id`
 		LEFT JOIN
-			`discounts` ON `discounts`.`id`=`$table`.`discount_id` AND NOW() BETWEEN `discounts`.`start` AND `discounts`.`stop`
-		WHERE 1
-			AND products.id=$product_id
-	";
+			`car_model` ON `car_model`.`id` = `$table`.`carmodel`
+		LEFT JOIN
+			`discounts` ON `discounts`.`id` = `$table`.`discount_id` AND NOW() BETWEEN `discounts`.`start` AND `discounts`.`stop`
+		WHERE 
+			`$table`.`id` = $product_id
+			AND `$table`.`type_of_light_product` IN (
+				SELECT `id` FROM `type_of_light_product` WHERE `descr` LIKE '%$type_of_light_product%'
+			)
+		GROUP BY `$table`.`id`
+		ORDER BY `$table`.`name`
+		LIMIT 50
+	) AS t
+	LEFT JOIN
+		`reviews` AS r ON r.product_id = t.id
+";
 	$res=mysqli_query($con, $query) or die(mysqli_error($con));
 
 	$row=mysqli_fetch_array($res, MYSQLI_ASSOC);
@@ -162,16 +181,167 @@
 	else {
 		$price_str="<font style='color: #000;'>$row[price]$valuta</font>";
 	};
+	$avg_estimation = isset($row['avg_estimation']) ? round($row['avg_estimation'], 2) : "Пока нет отзывов для этого товара.";
+	
+// Теперь, когда у нас есть значение type_of_light_product, мы можем выбрать соответствующие характеристики
+$query = "SELECT * FROM type_of_light_product WHERE id =".$row['type_of_light_product'];
+$result = mysqli_query($con, $query);
+$row2 = mysqli_fetch_assoc($result);
 
+// Выводим характеристики
+echo "Характеристики:<br>";
+
+// Поворотник
+if ($row2['Поворотник'] !== null) {
+    $query = "SELECT category.id as cat_id,
+    category.descr as cat_descr,
+    type_of_light_source.id as source_id,
+    type_of_light_source.descr as source_descr,
+    type_of_light_source.power,
+    type_of_light_source.lumen,
+    type_of_light_source.voltage,
+    type_of_light_source.glow_temperature,
+    type_of_light_reflector.id as reflector_id,
+    type_of_light_reflector.descr as reflector_descr
+FROM `category`
+LEFT JOIN `type_of_light_source` ON `category`.`type_of_light_source` = `type_of_light_source`.`id`
+LEFT JOIN `type_of_light_reflector` ON `category`.`type_of_light_reflector` = `type_of_light_reflector`.`id`
+WHERE `category`.`id` =" . $row2['Поворотник'];
+    $result = mysqli_query($con, $query);
+    $row3 = mysqli_fetch_assoc($result);
+    echo "Поворотник:". $row3['cat_descr'] . ", " . $row3['source_descr'] . ", мощность: " . $row3['power'] . "вт <br>";
+}
+
+
+// Ближний свет
+if ($row2['Ближний свет'] !== null) {
+
+	$query = "SELECT category.id as cat_id,
+    category.descr as cat_descr,
+    type_of_light_source.id as source_id,
+    type_of_light_source.descr as source_descr,
+    type_of_light_source.power,
+    type_of_light_source.lumen,
+    type_of_light_source.voltage,
+    type_of_light_source.glow_temperature,
+    type_of_light_reflector.id as reflector_id,
+    type_of_light_reflector.descr as reflector_descr
+FROM `category`
+LEFT JOIN `type_of_light_source` ON `category`.`type_of_light_source` = `type_of_light_source`.`id`
+LEFT JOIN `type_of_light_reflector` ON `category`.`type_of_light_reflector` = `type_of_light_reflector`.`id`
+WHERE `category`.`id` =" . $row2['Ближний свет'];
+    $result = mysqli_query($con, $query);
+    $row3 = mysqli_fetch_assoc($result);
+    echo "Ближний свет:".$row3['cat_descr'] . ", " . $row3['source_descr'] . ", мощность: " . $row3['power'] . "вт, температура  свечения: " . $row3['glow_temperature'] . "K<br>";
+}
+
+// Дальний свет
+if ($row2['Дальний свет'] !== null) {
+   
+	$query = "SELECT category.id as cat_id,
+    category.descr as cat_descr,
+    type_of_light_source.id as source_id,
+    type_of_light_source.descr as source_descr,
+    type_of_light_source.power,
+    type_of_light_source.lumen,
+    type_of_light_source.voltage,
+    type_of_light_source.glow_temperature,
+    type_of_light_reflector.id as reflector_id,
+    type_of_light_reflector.descr as reflector_descr
+FROM `category`
+LEFT JOIN `type_of_light_source` ON `category`.`type_of_light_source` = `type_of_light_source`.`id`
+LEFT JOIN `type_of_light_reflector` ON `category`.`type_of_light_reflector` = `type_of_light_reflector`.`id`
+WHERE `category`.`id` =" . $row2['Дальний свет'];
+    $result = mysqli_query($con, $query);
+    $row3 = mysqli_fetch_assoc($result);
+    echo "Дальний свет:". $row3['cat_descr'] . ", " . $row3['source_descr'] . ", мощность: " . $row3['power'] . "вт, температура  свечения: " . $row3['glow_temperature'] . "K<br>";
+}
+// Габаритные огни
+if ($row2['Габаритные огни'] !== null) {
+	$query = "SELECT category.id as cat_id,
+    category.descr as cat_descr,
+    type_of_light_source.id as source_id,
+    type_of_light_source.descr as source_descr,
+    type_of_light_source.power,
+    type_of_light_source.lumen,
+    type_of_light_source.voltage,
+    type_of_light_source.glow_temperature,
+    type_of_light_reflector.id as reflector_id,
+    type_of_light_reflector.descr as reflector_descr
+FROM `category`
+LEFT JOIN `type_of_light_source` ON `category`.`type_of_light_source` = `type_of_light_source`.`id`
+LEFT JOIN `type_of_light_reflector` ON `category`.`type_of_light_reflector` = `type_of_light_reflector`.`id`
+WHERE `category`.`id` =" . $row2['Габаритные огни'];
+    $result = mysqli_query($con, $query);
+    $row3 = mysqli_fetch_assoc($result);
+    echo "Габаритные огни:".$row3['cat_descr'] . ", " . $row3['source_descr'] . ", мощность: " . $row3['power'] . "вт, температура  свечения: " . $row3['glow_temperature'] . "K<br>";
+
+}
+// ДХО
+if ($row2['Дневные ходовые огни'] !== null) {
+	$query = "SELECT category.id as cat_id,
+    category.descr as cat_descr,
+    type_of_light_source.id as source_id,
+    type_of_light_source.descr as source_descr,
+    type_of_light_source.power,
+    type_of_light_source.lumen,
+    type_of_light_source.voltage,
+    type_of_light_source.glow_temperature,
+    type_of_light_reflector.id as reflector_id,
+    type_of_light_reflector.descr as reflector_descr
+FROM `category`
+LEFT JOIN `type_of_light_source` ON `category`.`type_of_light_source` = `type_of_light_source`.`id`
+LEFT JOIN `type_of_light_reflector` ON `category`.`type_of_light_reflector` = `type_of_light_reflector`.`id`
+WHERE `category`.`id` =" . $row2['Дневные ходовые огни'];
+    $result = mysqli_query($con, $query);
+    $row3 = mysqli_fetch_assoc($result);
+    echo "Дневные ходовые огни:".$row3['cat_descr'] . ", " . $row3['source_descr'] . ", мощность: " . $row3['power'] . "вт, температура  свечения: " . $row3['glow_temperature'] . "K<br>";
+}
+// Задний ход
+if ($row2['Задний ход'] !== null) {
+	$query = "SELECT category.id as cat_id,
+    category.descr as cat_descr,
+    type_of_light_source.id as source_id,
+    type_of_light_source.descr as source_descr,
+    type_of_light_source.power,
+    type_of_light_source.lumen,
+    type_of_light_source.voltage,
+    type_of_light_source.glow_temperature,
+    type_of_light_reflector.id as reflector_id,
+    type_of_light_reflector.descr as reflector_descr
+FROM `category`
+LEFT JOIN `type_of_light_source` ON `category`.`type_of_light_source` = `type_of_light_source`.`id`
+LEFT JOIN `type_of_light_reflector` ON `category`.`type_of_light_reflector` = `type_of_light_reflector`.`id`
+WHERE `category`.`id` =" . $row2['Задний ход'];
+    $result = mysqli_query($con, $query);
+    $row3 = mysqli_fetch_assoc($result);
+    echo "Задний ход:".$row3['cat_descr'] . ", " . $row3['source_descr'] . ", мощность: " . $row3['power'] . "вт, температура  свечения: " . $row3['glow_temperature'] . "K<br>";
+
+}
+
+	// Противотуманная фара
+if ($row2['Противотуманная фара'] !== null) {
+    echo "Противотуманная фара: " . $row2['Противотуманная фара'] . "<br>";
+}
+// Противотуманная фонарь
+if ($row2['Противотуманный фонарь'] !== null) {
+echo "Противотуманный фонарь: " . $row2['Противотуманный фонарь'] . "<br>";
+}
+// Корректор угла наклона фар
+if ($row2['Корректор угла наклона фар'] !== null) {
+	echo "Корректор угла наклона фар: " . $row2['Корректор угла наклона фар'] . "<br>";
+	}
 	echo "
 		<h1>$row[name]</h1>
 		$new
-		<p>$row[descr]</p>
 		<img src=\"$fname\" width=\"500px\" height=\"500px\" style='cursor:pointer;' onclick='to_cart($row[id]);'><br>
+		Оценка по отзывам: $avg_estimation<br>
+		Описание:$row[descr]<p>
+		Характеристики:
 		<p>Цена: $price_str</p>
+		Осталось: $row[amount] шт.<br>
 		<button onclick='to_cart($row[id]);'>В корзину</button>
 	";
-
 ?>
 
 		</td>

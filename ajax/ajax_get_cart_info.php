@@ -1,4 +1,5 @@
 <?php
+	header('Content-Type: text/html; charset=utf-8');
 	# скрипт возращает количество товаров и сумму корзины пользователя
 	include "../database.php";
 	include "../func.php";

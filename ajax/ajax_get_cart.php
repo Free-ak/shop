@@ -65,7 +65,7 @@
 		if (!file_exists('../upload/'.$row['product_id'].'.jpg')) { // если нет файла, показать "НЕТ ФОТО"
 			$fname='upload/0.jpg';
 		};
-		clearstatcache($fname);
+		clearstatcache(true, $fname);
 		echo "
 		<tr>
 			<td width=300px><image src='$fname' title='$row[name]' style='width:48px; height:48px'> $row[name]</td>
@@ -87,4 +87,3 @@
 		</td>
 	</tr>
 	</tbody></table>";
-?>

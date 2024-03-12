@@ -76,26 +76,26 @@ LOCK TABLES `type_of_light_source` WRITE;
 /*!40000 ALTER TABLE `type_of_light_source` DISABLE KEYS */;
 
 
-INSERT INTO `type_of_light_source` (`descr`, `power`, `lumen`, `voltage`, `glow_temperature`) VALUES
-('Автомобильная лампа', null, null, null, null),
-('LED', 100, 3000, 12, 5500),
-('LED', 100, 3000, 12, 6000),
-('LED', 100, 3000, 12, 4300),
-('LED', 50, 4500, 12, 6000),
-('LED', 15, 500, 12, 2000),
-('LED', 15, 500, 12, 1000),
-('Ксенон', 35, 2800, 80, 3000),
-('Ксенон', 35, 3000, 80, 5000),
-('Ксенон', 35, 2600, 80 , 6000),
-('Ксенон', 50, 3800, 80, 3000),
-('Ксенон', 50, 3900, 80, 5000),
-('Ксенон', 50, 3600, 80, 6000),
-('Галоген', 55, 1000, 12, 3000),
-('Галоген', 55, 1000, 12, 4300),
-('Галоген', 21, 250, 12, 1000),
-('Галоген', 21, 250, 12, 2000),
-('LED', 15, 500, 12, 5500),
-('LED', 15, 250, 12, 5500);
+INSERT INTO `type_of_light_source` (`id`,`descr`, `power`, `lumen`, `voltage`, `glow_temperature`) VALUES
+(0,'Автомобильная лампа', null, null, null, null),
+(1,'LED', 100, 3000, 12, 5500),
+(2,'LED', 100, 3000, 12, 6000),
+(3,'LED', 100, 3000, 12, 4300),
+(4,'LED', 50, 4500, 12, 6000),
+(5,'LED', 15, 500, 12, 2000),
+(6,'LED', 15, 500, 12, 1000),
+(7,'Ксенон', 35, 2800, 80, 3000),
+(8,'Ксенон', 35, 3000, 80, 5000),
+(9,'Ксенон', 35, 2600, 80 , 6000),
+(10,'Ксенон', 50, 3800, 80, 3000),
+(11,'Ксенон', 50, 3900, 80, 5000),
+(12,'Ксенон', 50, 3600, 80, 6000),
+(13,'Галоген', 55, 1000, 12, 3000),
+(14,'Галоген', 55, 1000, 12, 4300),
+(15,'Галоген', 21, 250, 12, 1000),
+(16,'Галоген', 21, 250, 12, 2000),
+(17,'LED', 15, 500, 12, 5500),
+(18,'LED', 15, 250, 12, 5500);
 /*!40000 ALTER TABLE `type_of_light_source` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +112,7 @@ CREATE TABLE `category` (
   `type_of_light_reflector` int,
   `type_of_light_source` int,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,25 +121,21 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` (`descr`,  `type_of_light_source`,`type_of_light_reflector`) 
+INSERT INTO `category` (`id`,`descr`,  `type_of_light_source`,`type_of_light_reflector`) 
 VALUES 
-('Не выбрано', 0, 0),
-('Ближний свет', 1,5),
-('Ближний свет', 2,5 ),
-('Ближний свет', 3,5 ),
-('Ближний свет', 4,7 ),
-('Ближний свет', 7, 7),
-('Ближний свет', 8, 7),
-('Ближний свет', 9,7 ),
-('Ближний свет', 10,7 ),
-('Дальний свет', 13,1),
-('Дальний свет', 4,3 ),
-('Поворотник', 15,1 ),
-('Поворотник', 15,8 ),
-('Задний ход', 6,1 ),
-('Задний ход', 16,8 ),
-('Дхо', 17,8 ),
-('Габаритные огни', 18,8 );
+(0,'Не выбрано', 0, 0),
+(1,'Ближний свет bi-led модуль', 1,5),
+(2,'Ближний свет bi-led модуль', 2,5 ),
+(3,'Ближний свет bi-led модуль', 3,5 ),
+(4,'Ближний свет bi-xenon линза', 8,7 ),
+(5,'Ближний свет bi-xenon линза', 7, 7),
+(9,'Дальний свет галогенновый в рефлекторе', 13,1),
+(10,'Дальний свет led модуль', 4,3 ),
+(11,'Поворотник галогенновый в рефлекторе', 15,1 ),
+(12,'Поворотник динамический', 6,8 ),
+(13,'Задний ход led полосой', 18,8 ),
+(14,'Дхо led полосой', 17,8 ),
+(15,'Габаритные огни led полосой', 18,8 );
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,6 +155,7 @@ CREATE TABLE `type_of_light_product` (
   `Задний ход` int UNSIGNED null,
   `Противотуманная фара` int UNSIGNED null,
   `Противотуманный фонарь` int UNSIGNED null,
+  `Корректор угла наклона фар` boolean null,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -169,13 +166,13 @@ CREATE TABLE `type_of_light_product` (
 
 LOCK TABLES `type_of_light_product` WRITE;
 /*!40000 ALTER TABLE `type_of_light_product` DISABLE KEYS */;
-INSERT INTO `type_of_light_product` (`descr`, `Поворотник`, `Ближний свет`, `Дальний свет`, `Габаритные огни`, `ДХО`, `Задний ход`, `Противотуманная фара`, `Противотуманный фонарь`) 
+INSERT INTO `type_of_light_product` (`id`,`descr`, `Поворотник`, `Ближний свет`, `Дальний свет`, `Габаритные огни`, `ДХО`, `Задний ход`, `Противотуманная фара`, `Противотуманный фонарь`,`Корректор угла наклона фар`) 
 VALUES 
-('Передние Bi-led фары', 6, 2, 5, 10, 10, NULL, NULL, NULL),
-('Передние Bi-xenon фары', 15, 3, 3, 10, 10, NULL, NULL, NULL),
-('Задние фонари', 8, NULL, NULL, 10, NULL, 17, NULL, 16),
-('Дневные ходовые огни', NULL, NULL, NULL, NULL, 15, NULL, NULL, NULL),
-('Задний ход и габаритные огни', NULL, NULL, NULL, 10, NULL, 17, NULL, NULL);
+(1,'Передние фары Bi-led', 12, 2, 9, 15, 14, NULL, NULL, NULL,1),
+(2,'Передние фары  Bi-xenon', 11, 3, 3, 10, 10, NULL, NULL, NULL,1),
+(3,'Задние фонари', 12, NULL, NULL, 15, NULL, 17, NULL, 16,NULL),
+(4,'Дневные ходовые огни', NULL, NULL, NULL, NULL, 15, NULL, NULL, NULL,NULL),
+(5,'Задний ход и габаритные огни', NULL, NULL, NULL, 10, NULL, 17, NULL, NULL,NULL);
 /*!40000 ALTER TABLE `type_of_light_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
